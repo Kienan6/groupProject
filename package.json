@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kienan6/groupProject/issues"
   },
-  "homepage": "https://github.com/kienan6/groupProject#readme"
+  "homepage": "https://github.com/kienan6/groupProject#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
