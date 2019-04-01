@@ -118,7 +118,7 @@ body,html {
 }
 .message-text {
 	display: inline;
-	width: 70%;
+	width: 80%;
 	min-height: 50px;
 	float: left;
 	padding: 5px;
@@ -127,6 +127,9 @@ body,html {
 }
 .message-text p {
 	word-break: break-all;
+}
+.message-text:hover {
+	background: silver;
 }
 .message-avatar {
 	margin-top: 25px;
@@ -159,4 +162,45 @@ body,html {
 }
 #send-message:hover {
 	background: #AD918D;
+}
+
+#information-container {
+	background: silver;
+	height: 470px;
+	padding: 10px;
+}
+#channel-information {
+	text-align: center;
+	border-bottom: 2px solid black;
+	margin-bottom: 25px;
+}
+.information-header {
+	font-weight: bold;
+}
+#channel-description {
+	text-align: left;
+	word-break: break-all;
+	width: 100%;
+}
+#online-container {	
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+#channel-online {
+	text-align: center;
+}
+#online-table {
+
+}
+#online-table th, td {
+	padding: 5px;
+}
+#online-table img {
+	width: 40px;
+	height: 40px;
+}
+#online-table img:hover {
+	height: 35px;
+	width: 35px;
+	padding: 2.5px;
 }
