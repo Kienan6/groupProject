@@ -1,0 +1,162 @@
+body,html {
+	width: 99%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+/*W3 Schools scrollbar styling*/
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #9BC5E9; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+#header-main {
+	min-height: 150px;
+	background: blue;
+}
+#right {
+	float: right;
+}
+#left {
+	float: left;
+}
+.header-info {
+	min-width: 300px;
+	background: grey;
+}
+.header-info #elem {
+
+}
+.header-info #logo {
+
+}
+#content-area {
+	width: 100%;
+	min-height: 500px;
+	background: grey;
+}
+#channel-container {
+	width: 200px;
+	height: 500px;
+	background: #FDA1A1;
+	min-height: inherit;
+	overflow-x: hidden;
+	overflow-y: auto;
+	border-right: 2px solid black;
+	float: left;
+	display: inline-block;
+}
+#friends-holder {
+	height: auto;
+	width: inherit;
+	background: grey;
+	padding: 5px;
+}
+.container-header {
+	width: inherit;
+	text-align:center;
+}
+.avatar-friend img{
+	height: 50px;
+	width: 50px;
+}
+.avatar-friend:hover {
+	height:40px;
+}
+
+.channel {
+	display: inline-block;
+	width: 100%;
+}
+.channel:hover {
+	background: #C97676;
+}
+.avatar-channel span{
+	float: left;
+}
+.avatar-channel img {
+	height: 60px;
+	width: 60px;
+	float: left;
+	margin: 3px;
+}
+
+#chat-container {
+	position: relative;
+	padding: 15px;
+	width: 60%;
+	min-height: 470px;
+	background: #817D96;
+	float: left;
+	display: inline-block;
+}
+#message-container {
+	border-bottom: 2px solid black;
+	position: absolute;
+	padding: 10px;
+	display: block;
+	height: 350px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+.message {
+	display: inline-block;
+}
+.message-text {
+	display: inline;
+	width: 70%;
+	min-height: 50px;
+	float: left;
+	padding: 5px;
+	margin: 15px;
+	border: 1px solid black;
+}
+.message-text p {
+	word-break: break-all;
+}
+.message-avatar {
+	margin-top: 25px;
+	float: left;
+}
+.message-avatar img {
+	height: 50px;
+	width: 50px;
+}
+#text-box {
+	position: absolute;
+	bottom: 0px;
+	padding: 20px;
+	display: inline-block;
+}
+#message-textarea {
+	display: inline-block;
+	vertical-align: bottom;
+	height: 75px;
+	width: 400px;
+	background: #CCAFAB;
+}
+#send-message {
+	display: inline-block;
+	height: 80px;
+	width: 100px;
+	vertical-align: bottom;
+	background: #CCAFAB;
+	border: none;
+}
+#send-message:hover {
+	background: #AD918D;
+}
