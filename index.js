@@ -46,6 +46,23 @@ app.get('/', function (req, res) {
       }
     });
   }
+  else if(req.query.mode == "getChannels") {
+    con.query("SELECT name FROM channels", function(err, result, fields) {
+      if (err) throw err;
+      let json = {};
+      json["channelNames"] = result;
+      res.send(JSON.stringify(json));
+    });
+  }
+  else if(req.query.mode == "getChannelMessages") {
+    let channelName = req.query.channelName;
+    con.query("SELECT message FROM Channel" + channelName, function(err, result, fields) {
+      if (err) throw err;
+      let json = {};
+      json["messages"] = result;
+      res.send(JSON.stringify(json));
+    });
+  }
 });
 
 app.post('/', jsonParser, function(req, res) {
@@ -65,6 +82,34 @@ app.post('/', jsonParser, function(req, res) {
       } else {
         res.send("failure");
       }
+    });
+  }
+  else if(req.body.mode == "createChannel") {
+    let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'";
+    con.query(sql, function(err, result, fields) {
+      if (err) throw err;
+      console.log("Length: " + result.length);
+      if(result.length == 0) {
+        sql = "INSERT INTO channels (name) VALUES ('" + req.body.channelName.replace(" ", "_") + "')";
+        con.query(sql, function (err2, result2) {
+          if (err2) throw err2;
+          console.log("1 record inserted");
+        });
+        sql = "CREATE TABLE IF NOT EXISTS Channel" + req.body.channelName.replace(" ", "_") + " (id Int AUTO_INCREMENT, message VARCHAR(65000) NOT NULL, PRIMARY KEY (id));";
+        con.query(sql, function (err2, result2) {
+          if (err2) throw err2;
+          console.log("1 record inserted");
+          res.send("success");
+        });
+      } else {
+        res.send("failure");
+      }
+    });
+  }
+  else if(req.body.mode == "sendMessage") {
+    con.query("INSERT INTO Channel" + req.body.channelName + " (message) VALUES ('" + req.body.userMessage.replace("'", "''") + "')", function(err, result) {
+      if (err) throw err;
+      res.send("success");
     });
   }
 })

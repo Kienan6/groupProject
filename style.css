@@ -209,3 +209,6 @@ body,html {
 	border-color: black;
 	float: right;
 }
+#channelButtons {
+	text-align: center;
+}
