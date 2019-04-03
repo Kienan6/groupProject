@@ -9,14 +9,25 @@
   <body>
 
   <div id="header-main">
-  	<div class="header-info" id="left"></div>
+  	<div class="header-info" id="left"><h2>CHAT SITE</h2></div>
   	<div class="header-info" id="right">
-      <div id="log-in">
-        <button id="log-in-button">Log In</button>
-        <button id="create-account-button">Create Account</button>
-      </div>
+     <div class="elem"><img src="images/avatar.jpg" alt="person 1"></div>
+     <div class="elem"><img src="images/avatar.jpg" alt="person 1"></div>
+     <div class="elem" onclick="showForm()"><img src="images/avatar.jpg" alt="person 1"></div>
     </div>
   </div>
+
+
+  <div class="popout" id="login-form">
+      <form action="" class="container-login">
+        <label for="username">Username: </label>
+        <input type="text" name="username">
+        <label for="pass">Password: </label>
+        <input type="password" name="pass">
+        <button type="submit" name="submit">Login</button>
+        <button type="submit" onclick="showForm()" name="cancel">Cancel</button>
+      </form>
+    </div>
 
   <div id="content-area">
 
@@ -97,9 +108,6 @@
   					</div>
   				</div>
   			</div>
-        <div id="channel-buttons">
-          <button id="create-channel-button">Create Channel</button>
-        </div>
   		</div>
   	</div>
 

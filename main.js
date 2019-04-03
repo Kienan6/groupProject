@@ -207,6 +207,14 @@
   function logOut() {
 
   }
-
+  function showForm() {
+        var popout = document.getElementById("login-form");
+        var visible = popout.style.display;
+        if(visible == "block"){
+          popout.style.display= "none";
+        } else {
+          popout.style.display = "block";
+        }
+      }
   window.onload = initialize;
 })();

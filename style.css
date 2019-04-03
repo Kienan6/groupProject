@@ -212,3 +212,22 @@ body,html {
 #channelButtons {
 	text-align: center;
 }
+.popout {
+	display: none;
+	position: fixed;
+	top: 50px;
+	right:90px;
+	border: 2px solid black;
+}
+.container-login {
+	max-width: 300px;
+	padding: 10px;
+	background: white;
+}
+.container-login input{
+	width: 95%;
+	padding: 5px;
+	margin: 10px 0px 10px 0px;
+	z-index: -10;
+
+}
