@@ -196,7 +196,7 @@
     });
   }
 
-  function loadChannelMessages(channelName) {
+  function loadChannelMessages(channelName) { 
     currentChannel = channelName;
     let url = window.location.href +"channels?mode=getChannelMessages&channelName=" + channelName;
     fetch(url)
@@ -205,7 +205,7 @@
           let data = JSON.parse(responseText);
           document.getElementById("message-container").innerHTML = "";
           for(let i = 0; i < data.messages.length; i++) {
-            createMessageElem("images/avatar.jpg", data.messages[i].message);
+            createMessageElem("images/avatar.jpg", data.messages[i].userName, data.messages[i].message);
           }
       })
       .catch(function(error) {
@@ -316,12 +316,17 @@ function addChannelElem(img, name) {
   container.append(newChannel);
 
 }
-function createMessageElem(userImg, message) {
+function createMessageElem(userImg, username, message) {
   let container = document.getElementById("message-container");
   let m = document.createElement("div");
   m.setAttribute("class", "message");
+  let mUser = document.createElement("div");
+  mUser.setAttribute("class", "message-user");
   let avatar = document.createElement("div");
   avatar.setAttribute("class", "message-avatar");
+  let head = document.createElement("h4");
+  head.innerText = username;
+  head.setAttribute("class", "message-user-name");
   let img = document.createElement("img");
   img.setAttribute("src", userImg);
   let txtContainer = document.createElement("div");
@@ -330,7 +335,8 @@ function createMessageElem(userImg, message) {
   p.innerText = message;
   txtContainer.appendChild(p);
   avatar.appendChild(img);
-  m.append(avatar, txtContainer);
+  mUser.append(avatar, head);
+  m.append(mUser, txtContainer);
   container.appendChild(m);
 }
 function addOnlineUser(userInfo) {
