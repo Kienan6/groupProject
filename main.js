@@ -44,6 +44,9 @@
     let url = "http://localhost:3000/user?mode=logout";
     fetch(url)
       .then(checkStatus)
+      .then(function(response){
+        location.reload();
+      })
       .catch(function(error) {
         console.log(error);
     });
@@ -222,15 +225,13 @@
     }
   }
 
-  function logOut() {
-
-  }
   window.onload = initialize;
 
 function showLoginForm() {
         getUser().then(checkStatus)
           .then(function(responseText){
             var popout = document.getElementById("login-form");
+            var logoutform = document.getElementById("logout-form");
             var visible = popout.style.display;
             console.log(responseText);
             if(responseText == "false") {
@@ -242,7 +243,12 @@ function showLoginForm() {
               }
               console.log(responseText);
             } else {
-              alert("Already logged in");
+              visible = logoutform.style.display;
+               if(visible == "block"){
+                logoutform.style.display= "none";
+              } else {
+                logoutform.style.display = "block";
+              }
               popout.style.display= "none";
             }
           })
