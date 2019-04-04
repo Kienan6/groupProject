@@ -12,17 +12,17 @@ body,html {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f1f1; 
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #9BC5E9;
+  background: #9BC5E9; 
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #555; 
 }
 #header-main {
 	min-height: 150px;
@@ -36,10 +36,20 @@ body,html {
 }
 .header-info {
 	min-width: 300px;
-	background: grey;
+	padding: 20px;
 }
-.header-info #elem {
-
+.header-info .elem {
+	display: inline-block;
+	margin: 10px;
+}
+.header-info .elem img{
+	width: 50px;
+	height: 50px;
+}
+.header-info .elem img:hover{
+	width: 45px;
+	height: 45px;
+	padding: 2.5px;
 }
 .header-info #logo {
 
@@ -182,7 +192,7 @@ body,html {
 	word-break: break-all;
 	width: 100%;
 }
-#online-container {
+#online-container {	
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -204,14 +214,6 @@ body,html {
 	width: 35px;
 	padding: 2.5px;
 }
-#log-in {
-	border-width: 2px;
-	border-color: black;
-	float: right;
-}
-#channelButtons {
-	text-align: center;
-}
 .popout {
 	display: none;
 	position: fixed;
@@ -230,4 +232,12 @@ body,html {
 	margin: 10px 0px 10px 0px;
 	z-index: -10;
 
+}
+#log-in {
+	border-width: 2px;
+	border-color: black;
+	float: right;
+}
+#channelButtons {
+	text-align: center;
 }

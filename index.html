@@ -8,24 +8,40 @@
   </head>
   <body>
 
+
   <div id="header-main">
   	<div class="header-info" id="left"><h2>CHAT SITE</h2></div>
   	<div class="header-info" id="right">
-     <div class="elem"><img src="images/avatar.jpg" alt="person 1"></div>
-     <div class="elem"><img src="images/avatar.jpg" alt="person 1"></div>
-     <div class="elem" onclick="showForm()"><img src="images/avatar.jpg" alt="person 1"></div>
+     <div class="elem" onclick="addChannelElem('images/avatar.jpg', 't');"><img src="images/avatar.jpg" alt="person 1"></div>
+     <div class="elem" onclick="updateChannelList()"><img src="images/avatar.jpg" alt="person 1"></div>
+     <div class="elem" onclick="showLoginForm()"><img src="images/avatar.jpg" alt="person 1"></div>
     </div>
   </div>
 
 
   <div class="popout" id="login-form">
-      <form action="" class="container-login">
+      <form action="javascript:void(0);" class="container-login" id="login" onsubmit="logIn()">
         <label for="username">Username: </label>
         <input type="text" name="username">
         <label for="pass">Password: </label>
         <input type="password" name="pass">
         <button type="submit" name="submit">Login</button>
-        <button type="submit" onclick="showForm()" name="cancel">Cancel</button>
+        <button type="submit" onclick="showLoginForm()" name="cancel">Cancel</button>
+        <button type="submit" onclick="showLoginForm(); showCreateForm()" name="create-acc">Create Account</button>
+        <span id="error-login" style="color:red"></span>
+      </form>
+    </div>
+
+    <div class="popout" id="create-form">
+      <form action="javascript:void(0);" class="container-login" id="create" onsubmit="createAccount()">
+        <h3>Create account</h3>
+        <label for="username">Username: </label>
+        <input type="text" name="username">
+        <label for="password">Password: </label>
+        <input type="password" name="password">
+        <button type="submit" name="submit">Create Account</button>
+        <button type="submit" onclick="showCreateForm();" name="cancel">Cancel</button>
+        <span id="error-login" style="color:red"></span>
       </form>
     </div>
 
