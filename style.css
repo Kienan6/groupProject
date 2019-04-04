@@ -273,3 +273,9 @@ body {
 td h4 {
 	font-weight: normal;
 }
+.message-user-name {
+	margin-left: 75px;
+}
+.header-info h2 {
+	font-size: 32pt;
+}
