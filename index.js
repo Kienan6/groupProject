@@ -2,9 +2,9 @@ const express = require('express')
 const app = express();
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
-const path = require('path');
 const session = require('express-session');
-const uuidv1 = require('uuid/v1');
+const http = require('http').Server(app);
+const io = require("socket.io")(http);
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -22,6 +22,10 @@ con.query("USE csc_346_group_project", function (err, result) {
 });
 app.use("/", express.static(__dirname));
 app.use("/profile", express.static(__dirname + "/profile"));
+
+io.on('connection', () =>{
+ console.log('connected t');
+});
 
 //express session api example code
 app.use(session({
@@ -162,12 +166,12 @@ app.get('/channels', function (req, res) {
     }
   }
 });
-app.post('/messages', function(req, res) {
+app.post('/messages', jsonParser, function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   if(req.body.mode == "send") {
     if(req.session.user){
-      let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'";
-      console.log("SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'");
+      let sql = "SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.replace(" ", "_") + "'";
+      console.log("SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.replace(" ", "_") + "'");
         con.query(sql, function(err, result, fields){
           if (err) throw err;
           con.query("SELECT id FROM users WHERE userName = '" + req.session.user.username+"'", function(err, result1){
@@ -176,6 +180,7 @@ app.post('/messages', function(req, res) {
               if (err) throw err;
               res.send("success");
               //IO EMITTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+                  io.emit('chat', req.body.userMessage.replace("'", "''"));
             });
           });
       });
@@ -232,4 +237,6 @@ app.post('/channels', jsonParser, function(req, res) {
 
 app.locals.title = "new app";
 
-app.listen(3000);
+http.listen(3000, () => {
+  console.log('server is running on port');
+});

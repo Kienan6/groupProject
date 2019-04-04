@@ -1,6 +1,5 @@
 "use strict";
   let currentChannel = "";
-
   function initialize() {
     //let url = "http://ec2-3-85-40-76.compute-1.amazonaws.com";
     updateChannelList();
@@ -57,8 +56,11 @@
     channelName = channelName.replace(" ", "_");
     let url = "http://localhost:3000/channels?mode=set&channelName="+channelName;
     fetch(url)
-    .then(checkStatus(response))
+    .then(checkStatus)
     .then(function(response){
+      //var text = document.getElementsByClassName("send-message");
+      //var x = "sendMessage('"+channelName+"')";
+      //text[0].setAttribute("onclick", x);//update the text box
       loadChannelMessages(channelName);
     })
     .catch(function(err){
@@ -112,7 +114,7 @@
     let channelDesc = prompt("Enter a short description for the channel,", "");
     const message = {mode: "createChannel",
                      channelName: channelName,
-                     desc, channelDesc}; // set fields of the message object to the current name and comment
+                     desc: channelDesc}; // set fields of the message object to the current name and comment
     const fetchOptions = {
         method : 'POST',
         headers : {
@@ -180,11 +182,10 @@
         console.log(err);
       });
   }
-  function sendMessage(currentChannel) {
+  function sendMessage() {
     let text = document.getElementById("message-textarea").value;
     const message = {mode: "send",
-                     userMessage: text,
-                     channelName: currentChannel}; // set fields of the message object to the current name and comment
+                     userMessage: text}; // set fields of the message object to the current name and comment
     const fetchOptions = {
         method : 'POST',
         headers : {
@@ -198,6 +199,7 @@
       .then(checkStatus)
       .then(function(responseText) {
         if(responseText == "success") {
+          socket.emit('message', text);
           document.getElementById("message-textarea").value = "";
         } else {
 

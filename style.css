@@ -174,7 +174,7 @@ body {
 	width: 400px;
 	background: white;
 }
-#send-message {
+.send-message {
 	display: inline-block;
 	height: 80px;
 	width: 100px;
@@ -183,7 +183,7 @@ body {
 	border: none;
 	overflow: hidden;
 }
-#send-message:hover {
+.send-message:hover {
 	background: #D1D1D1;
 }
 
