@@ -187,6 +187,16 @@ app.get('/channels', function (req, res) {
       if(req.session.user){
         res.send(req.session.user.curChannel);
       }
+  } else if(req.query.mode == "getUserFromMessage") {
+    if(req.session.user) {
+      con.query("SELECT user_id FROM messages WHERE message ='" + req.query.message + "'", function(err, result) {
+        if (err) return err;
+        con.query("SELECT userName FROM users WHERE id = '" + result[0].user_id + "'", function(err2, result2) {
+          if(err) return err;
+          res.send(result[0].userName);
+        });
+      });
+    }
   }
 });
 app.post('/messages', jsonParser, function(req, res) {

@@ -6,6 +6,7 @@ body,html {
 	margin: 0;
 	padding: 0;
 	font-family: "Kazuka Gothic Pro", Arial, sans-serif;
+	color: #CCCCCC;
 }
 body {
 	display: flex;
@@ -50,6 +51,7 @@ body {
 .header-info .elem {
 	display: inline-block;
 	margin: 10px;
+	text-align: center;
 }
 .header-info .elem img{
 	width: 50px;
@@ -103,9 +105,11 @@ body {
 .channel {
 	display: inline-block;
 	width: 100%;
+	margin-left: 20px;
+	margin-top: 20px;
 }
 .channel:hover {
-	background: #C97676;
+	background: #919191;
 }
 .avatar-channel span{
 	float: left;
@@ -114,7 +118,7 @@ body {
 	height: 60px;
 	width: 60px;
 	float: left;
-	margin: 3px;
+	margin-right: 20px;
 }
 
 #chat-container {
@@ -141,7 +145,7 @@ body {
 .message-text {
 	display: block;
 	min-height: 50px;
-	padding: 5px;
+	padding: 5px 5px 5px 20px;
 	margin: 15px;
 	border: 1px solid black;
 	border-radius: 10px;
@@ -150,6 +154,7 @@ body {
 }
 .message-text p {
 	word-break: break-all;
+	color: black;
 }
 .message-text:hover {
 	background: silver;
@@ -206,9 +211,10 @@ body {
 #channel-description {
 	text-align: left;
 	word-break: break-all;
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-top: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 #online-container {
 	overflow-y: auto;
@@ -260,4 +266,10 @@ body {
 }
 #channelButtons {
 	text-align: center;
+}
+.iconText {
+	font-size: 7pt;
+}
+td h4 {
+	font-weight: normal;
 }
