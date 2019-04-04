@@ -121,7 +121,7 @@
   }
   //existing channel
   function addChannel(){
-    let channelName = prompt("Enter the name of the channel to join:", "");
+    let channelName = prompt("Enter the name of the channel to join:", ""); 
     const message = {mode: "joinChannel",
                      channelName: channelName}; // set fields of the message object to the current name and comment
     const fetchOptions = {
@@ -187,7 +187,7 @@
         for(let i = 0; i < data.channelNames.length; i++) {
           if(data.channelNames[i].length >0) {
             console.log(data.channelNames[i]);
-            addChannelElem("images/messageIcon.png", data.channelNames[i].split("_").join(" "));
+            addChannelElem("images/avatar.jpg", data.channelNames[i].split("_").join(" "));
           }
         }
       })
@@ -373,7 +373,7 @@ function getDescription() {
     .catch(function(err){
       console.log(err);
     })
-    )
+    ) 
   .catch(function(err){
     console.log(err);
   })
