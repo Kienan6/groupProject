@@ -6,6 +6,9 @@
     updateChannelList();
     //setInterval(updatePage, 1000);
     document.getElementById("message-container").innerHTML = "";
+    document.getElementById("log-in-button").onclick = logIn;
+    document.getElementById("create-account-button").onclick = createAccount;
+    document.getElementById("create-channel-button").onclick = createChannel;
     document.getElementById("send-message").onclick = sendMessage;
   }
 
@@ -38,14 +41,28 @@
     });
   }
   function logout() {
+    //also leave the channel todo
     let url = "http://localhost:3000/user?mode=logout";
     fetch(url)
       .then(checkStatus)
       .then(function(response){
+        //leave then reload
         location.reload();
       })
       .catch(function(error) {
         console.log(error);
+    });
+  }
+  function joinChannel(channelName){
+    channelName = channelName.replace(" ", "_");
+    let url = "http://localhost:3000/channels?mode=set&channelName="+channelName;
+    fetch(url)
+    .then(checkStatus(response))
+    .then(function(response){
+      loadChannelMessages(channelName);
+    })
+    .catch(function(err){
+      console.log(err);
     });
   }
   function getUser() {
@@ -92,8 +109,10 @@
 
   function createChannel() {
     let channelName = prompt("Enter a name for the channel:", "");
+    let channelDesc = prompt("Enter a short description for the channel,", "");
     const message = {mode: "createChannel",
-                     channelName: channelName,}; // set fields of the message object to the current name and comment
+                     channelName: channelName,
+                     desc, channelDesc}; // set fields of the message object to the current name and comment
     const fetchOptions = {
         method : 'POST',
         headers : {
@@ -125,24 +144,7 @@
         document.getElementById("channels-list").innerHTML = "";
         let data = JSON.parse(responseText);
         for(let i = 0; i < data.channelNames.length; i++) {
-          let channelDiv = document.createElement("div");
-          let avatarChannel = document.createElement("div");
-          let avatar = document.createElement("img");
-          let channelNameSpan = document.createElement("span");
-          let channelName = document.createElement("h4");
-
-          channelDiv.className = "channel";
-          avatarChannel.className = "avatar-channel";
-          avatar.setAttribute("src", "images/avatar.jpg");
-          avatar.setAttribute("alt", data.channelNames[i].name);
-          channelNameSpan.className = "channel-name";
-          channelName.innerHTML = data.channelNames[i].name.replace("_", " ");
-          channelNameSpan.appendChild(channelName);
-          avatarChannel.appendChild(avatar);
-          avatarChannel.appendChild(channelNameSpan);
-          channelDiv.appendChild(avatarChannel);
-          document.getElementById("channels-list").appendChild(channelDiv);
-          channelName.onclick = loadChannelMessages;
+          addChannelElem("images/avatar.jpg", data.channelNames[i].name.replace("_", " "));
         }
       })
       .catch(function(error) {
@@ -150,8 +152,7 @@
     });
   }
 
-  function loadChannelMessages() {
-    let channelName = this.innerHTML.replace(" ", "_");
+  function loadChannelMessages(channelName) { 
     currentChannel = channelName;
     let url = "http://localhost:3000/channels?mode=getChannelMessages&channelName=" + channelName;
     fetch(url)
@@ -160,31 +161,26 @@
           let data = JSON.parse(responseText);
           document.getElementById("message-container").innerHTML = "";
           for(let i = 0; i < data.messages.length; i++) {
-            let messageDiv = document.createElement("div");
-            let messageAvatarDiv = document.createElement("div");
-            let avatar = document.createElement("img");
-            let messageTextDiv = document.createElement("div");
-            let message = document.createElement("p");
-
-            messageDiv.className = "message";
-            messageAvatarDiv.className = "message-avatar";
-            messageTextDiv.className = "message-text";
-            avatar.setAttribute("src", "images/avatar.jpg");
-            avatar.setAttribute("alt", "message-person");
-            message.innerHTML = data.messages[i].message;
-            messageAvatarDiv.appendChild(avatar);
-            messageTextDiv.appendChild(message);
-            messageDiv.appendChild(messageAvatarDiv);
-            messageDiv.appendChild(messageTextDiv);
-            document.getElementById("message-container").appendChild(messageDiv);
+            createMessageElem("images/avatar.jpg", data.messages[i].message);
           }
       })
       .catch(function(error) {
         console.log(error);
     });
   }
-
-  function sendMessage() {
+  function getOnlineChannel(channelName) {
+    channelName = channelName.replace(" ", "_");
+    let url = "http://localhost:3000/channels?mode=onlineUsers&channelName=" + channelName;
+    fetch(url)
+      .then(checkStatus)
+      .then(function(responseText){
+        //json format
+      })
+      .catch(function(err){
+        console.log(err);
+      });
+  }
+  function sendMessage(currentChannel) {
     let text = document.getElementById("message-textarea").value;
     const message = {mode: "send",
                      userMessage: text,
@@ -266,7 +262,10 @@ function showCreateForm() {
 function addChannelElem(img, name) {
   let container = document.getElementById("channels-list");
   let newChannel = document.createElement("div");
+  let nameUnderscore = name.replace(" ", "_");
   newChannel.setAttribute("class", "channel");
+  newChannel.setAttribute("id", nameUnderscore);
+  newChannel.setAttribute("onclick", "joinChannel('"+nameUnderscore+"')");
   let avatar = document.createElement("div");
   avatar.setAttribute("class", "avatar-channel");
   let avatarimg = document.createElement("img");
