@@ -203,7 +203,7 @@ app.post('/messages', jsonParser, function(req, res) {
               if (err) throw err;
               res.send("success");
               //IO EMITTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-                  io.emit('chat', {username: req.session.user.username, message: req.body.userMessage.replace("'", "''"));
+                  io.emit('chat', {username: req.session.user.username, message: req.body.userMessage.replace("'", "''")});
             });
           });
       });
