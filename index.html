@@ -11,7 +11,7 @@
     <script>
       var socket = io();
       socket.on('chat', function(msg) {
-        createMessageElem("images/avatar.jpg", msg);
+        createMessageElem("images/avatar.jpg", msg.username, msg.message);
       });
       socket.on('userOnline', function(msg){
         console.log(msg.username+ " "+msg.curChannel);
