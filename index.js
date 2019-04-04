@@ -18,7 +18,6 @@ var con = mysql.createConnection({
 
 con.connect(function(err) {
   if (err) throw err;
-  console.log("Connected");
 });
 con.query("USE csc_346_group_project", function (err, result) {
   if (err) throw err;
@@ -27,7 +26,8 @@ app.use("/", express.static(__dirname));
 app.use("/profile", express.static(__dirname + "/profile"));
 
 io.on('connection', (socket) =>{
- console.log('connected user');
+  console.log("connected io");
+ io.emit('chat', 'new client on '+socket+'!');
 });
 
 //express session api example code
