@@ -6,9 +6,6 @@
     updateChannelList();
     //setInterval(updatePage, 1000);
     document.getElementById("message-container").innerHTML = "";
-    document.getElementById("log-in-button").onclick = logIn;
-    document.getElementById("create-account-button").onclick = createAccount;
-    document.getElementById("create-channel-button").onclick = createChannel;
     document.getElementById("send-message").onclick = sendMessage;
   }
 
