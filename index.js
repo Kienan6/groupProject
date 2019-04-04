@@ -105,9 +105,13 @@ app.get('/channels', function (req, res) {
     }
   }
   else if(req.query.mode == "getChannelMessages") { //needs to be fixed
-    let channelName = req.query.channelName;
+    let channelName = req.query.channelName.split(" ").join("_");
     con.query("SELECT id FROM channels WHERE name = '"+ channelName +"'", function(err, result, fields){
       if(err) throw err;
+      if(result.length == 0){
+        res.send("");
+        return;
+      }
       con.query("SELECT message FROM messages WHERE channel_id = " + result[0].id, function(err, result1, fields) {
       if (err) throw err;
       let json = {};
@@ -116,30 +120,29 @@ app.get('/channels', function (req, res) {
     });
     });
   } else if(req.query.mode == "onlineUsers"){
-      let channelName = req.query.channelName;
+      let channelName = req.query.channelName.split(" ").join("_");;
       con.query("SELECT online FROM channels WHERE name = '" + channelName+"'", function(err, result, fields) {
         if (err) throw err;
         let onlineUsers = result[0].online;
         console.log(onlineUsers);
         //this can be split by commas
-        res.send(JSON.stringify(onlineUsers));
+        res.send(onlineUsers);
       });
   } else if(req.query.mode == "set"){
-    let channelName = req.query.channelName;
+    let channelName = req.query.channelName.split(" ").join("_");;
     if(req.session.user){
-      con.query("SELECT id FROM users where username ='"+req.session.user.username+"'", function(err, result){
-        if (err) throw err;
-        let userID = result[0].id;
+        let username = req.session.user.username;
         con.query("SELECT online FROM channels WHERE name = '" +req.session.user.curChannel+"'", function(err, result1) {
           if (err) throw err;
           let online = "";
-          if(result[0].length > 0){
+          if(result1.length > 0){
             //online in current channel
             online = result1[0].online;
             online = online.split(",");
             //loop through the online people and delete the current user
             for(var i = 0; i < online.length; i++){
-              if(online[i] == userID) {
+              if(online[i] == username) {
+                console.log(online[i]);
                 online.splice(i, 1);
               }
             }
@@ -150,32 +153,48 @@ app.get('/channels', function (req, res) {
             //set new channel as online
             con.query("SELECT online FROM channels WHERE name = '" +channelName+"'", function(err, result3) {
               if (err) throw err;
-              online = result3[0].online;
+              let online = "";
+              if(result3.length != 0){
+                online = result3[0].online;
+              }
                 //set new channel
               if(online.length == 0){
-                online += userID;
+                online += username;
               } else {
-                online += ","+userID;
+                online += ","+username;
               }
               con.query("UPDATE channels SET online = '"+online+"' WHERE name='"+channelName+"'", function(err,result4){
                 if (err) throw err;
                 //IO UPDATEEEEEE THE WEBPAGEEEE MAYBEEEE
-                req.session.user.curChannel = channelName;
-                res.send("success set and removed from old channel");
+                req.session.user.curChannel = channelName.split(" ").join("_");
+                io.emit('userOnline', {username : req.session.user.username, curChannel: req.session.user.curChannel});
+                res.send("success - set and removed from old channel");
               });
             });
           });
         });
-      });
     }
+  } else if(req.query.mode == "getDescription"){
+    if(req.session.user){
+      con.query("SELECT description FROM channels WHERE name = '"+req.session.user.curChannel+"'", function(err, result){
+        if(err) return err;
+        res.send(result[0].description);
+      });
+    } else {
+      res.send("");
+    }
+  } else if(req.query.mode == "getChannelName") {
+      if(req.session.user){
+        res.send(req.session.user.curChannel);
+      }
   }
 });
 app.post('/messages', jsonParser, function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   if(req.body.mode == "send") {
     if(req.session.user){
-      let sql = "SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.replace(" ", "_") + "'";
-      console.log("SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.replace(" ", "_") + "'");
+      let sql = "SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.split(" ").join("_") + "'";
+      console.log("SELECT id FROM channels WHERE name = '" + req.session.user.curChannel.split(" ").join("_") + "'");
         con.query(sql, function(err, result, fields){
           if (err) throw err;
           con.query("SELECT id FROM users WHERE userName = '" + req.session.user.username+"'", function(err, result1){
@@ -217,11 +236,11 @@ app.post('/channels', jsonParser, function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   if(req.body.mode == "createChannel") {
     if(req.session.user){
-      let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'";
+      let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.split(" ").join("_") + "'";
       con.query(sql, function(err, result, fields) {
         if (err) throw err;
         if(result.length == 0) {
-          sql = "INSERT INTO channels (name,desc) VALUES ('" + req.body.channelName.replace(" ", "_") + "," + req.body.description +"')";
+          sql = "INSERT INTO channels (name,description) VALUES ('" + req.body.channelName.split(" ").join("_") + "','" + req.body.desc.split(" ").join("_") +"')";
           con.query(sql, function (err2, result2) {
             if (err2) throw err2;
             console.log("1 record inserted");
@@ -234,7 +253,7 @@ app.post('/channels', jsonParser, function(req, res) {
     }
   } else if(req.body.mode == "joinChannel") {
     if(req.session.user){
-      let channel = req.body.channelName.replace(" ", "_");
+      let channel = req.body.channelName.split(" ").join("_");
       con.query("SELECT name FROM channels WHERE name = '"+channel+"'", function(err, result){
         if(err) throw err;
         if(result.length == 0){
@@ -244,7 +263,7 @@ app.post('/channels', jsonParser, function(req, res) {
         con.query("SELECT channels FROM users WHERE userName='"+req.session.user.username+"'", function(err, result1){
           if (err) throw err;
           let userChannels = result1[0].channels;
-                  //set new channel
+            //set new channel
           if(userChannels.length == 0){
             userChannels += channel;
           } else {

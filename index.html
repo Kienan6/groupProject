@@ -13,12 +13,16 @@
       socket.on('chat', function(msg) {
         createMessageElem("images/avatar.jpg", msg);
       });
+      socket.on('userOnline', function(msg){
+        console.log(msg.username+ " "+msg.curChannel);
+        addOnlineUser(msg);
+      });
     </script>
 
   <div id="header-main">
     <div class="header-info" id="left"><h2>CHAT SITE</h2></div>
     <div class="header-info" id="right">
-     <div class="elem" onclick="addChannelElem('images/avatar.jpg', 't');"><img src="images/logOutDoor.png" alt="person 1"></div>
+     <div class="elem" onclick="createChannel()"><img src="images/logOutDoor.png" alt="person 1"></div>
      <div class="elem" onclick="addChannel()"><img src="images/addServerIcon.png" alt="person 1"></div>
      <div class="elem" onclick="showLoginForm()"><img src="images/loginArrow.png" alt="person 1"></div>
     </div>
@@ -180,7 +184,7 @@
     <div id="information-container">
 
       <div id="channel-information">
-        <span class="information-header">Channel 1</span>
+        <span class="information-header" id="channel-name">Channel 1</span>
         <p id="channel-description">This is the description for my channel. If it gets too long it should extend to the next line</p>
       </div>
 

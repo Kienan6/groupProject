@@ -58,10 +58,21 @@
     fetch(url)
     .then(checkStatus)
     .then(function(response){
-      //var text = document.getElementsByClassName("send-message");
-      //var x = "sendMessage('"+channelName+"')";
-      //text[0].setAttribute("onclick", x);//update the text box
       loadChannelMessages(channelName);
+      getDescription();
+      getOnlineChannel(channelName)
+      .then(checkStatus)
+      .then(function(response){
+        document.getElementById("online-table").innerHTML = "";
+        response
+        response =response.split(",");
+        for(var i = 0; i < response.length; i++){
+          addOnlineElem(response[i]);
+        }
+      })
+      .catch(function(err){
+        console.log(err);
+      });
     })
     .catch(function(err){
       console.log(err);
@@ -129,7 +140,7 @@
           alert("Channel successfully joined");
           updateChannelList();
         } else {
-          alert("Failed to create channel. Channel with that name already exists.");
+          alert("Failed to find channel.");
         }
       })
       .catch(function(error) {
@@ -154,7 +165,7 @@
     fetch(url, fetchOptions)
       .then(checkStatus)
       .then(function(responseText) {
-        if(responseText == "success") {
+        if(responseText == "true") {
           alert("Channel successfully created");
           updateChannelList();
         } else {
@@ -176,7 +187,7 @@
         for(let i = 0; i < data.channelNames.length; i++) {
           if(data.channelNames[i].length >0) {
             console.log(data.channelNames[i]);
-            addChannelElem("images/avatar.jpg", data.channelNames[i].replace("_", " "));
+            addChannelElem("images/avatar.jpg", data.channelNames[i].split("_").join(" "));
           }
         }
       })
@@ -204,14 +215,7 @@
   function getOnlineChannel(channelName) {
     channelName = channelName.replace(" ", "_");
     let url = window.location.href +"channels?mode=onlineUsers&channelName=" + channelName;
-    fetch(url)
-      .then(checkStatus)
-      .then(function(responseText){
-        //json format
-      })
-      .catch(function(err){
-        console.log(err);
-      });
+    return fetch(url);
   }
   function sendMessage() {
     let text = document.getElementById("message-textarea").value;
@@ -328,4 +332,43 @@ function createMessageElem(userImg, message) {
   avatar.appendChild(img);
   m.append(avatar, txtContainer);
   container.appendChild(m);
+}
+function addOnlineUser(userInfo) {
+  if(userInfo.curChannel == document.getElementById("channel-name").innerText) {
+    addOnlineElem(userInfo.username);
+  }
+}
+function addOnlineElem(username) {
+  var table = document.getElementById("online-table");
+    var td = table.getElementsByTagName("td");
+    var tr = table.getElementsByTagName("tr");
+    var row = "";
+    if(td.length % 5 == 0){
+      row = table.insertRow(tr.length);
+    } else {
+      row = tr[tr.length-1];
+    }
+    var cell = row.insertCell();
+    cell.innerHTML = '<h4>'+username+'<h34>';
+}
+function getDescription() {
+  var container = document.getElementById("channel-description");
+  let url = window.location.href +"channels?mode=getDescription";
+  fetch(url)
+  .then(checkStatus)
+  .then(function(response){
+    container.innerText = response.split("_").join(" ");
+  })
+  .then(fetch(window.location.href + "channels?mode=getChannelName")
+    .then(checkStatus)
+    .then(function(response){
+      document.getElementById("channel-name").innerText = response;
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+    ) 
+  .catch(function(err){
+    console.log(err);
+  })
 }
