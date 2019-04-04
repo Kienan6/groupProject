@@ -5,6 +5,9 @@ const jsonParser = bodyParser.json();
 const session = require('express-session');
 const http = require('http').Server(app);
 const io = require("socket.io")(http);
+const redis = require('socket.io-redis');
+io.adapter(redis({ host: 'ec2-52-91-35-153.compute-1.amazonaws.com', port: 6379 }));
+
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
@@ -23,8 +26,8 @@ con.query("USE csc_346_group_project", function (err, result) {
 app.use("/", express.static(__dirname));
 app.use("/profile", express.static(__dirname + "/profile"));
 
-io.on('connection', () =>{
- console.log('connected t');
+io.on('connection', (socket) =>{
+ console.log('connected user');
 });
 
 //express session api example code
@@ -90,10 +93,12 @@ app.get('/channels', function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   if(req.query.mode == "getChannels") {
     if(req.session.user){
-      con.query("SELECT name FROM channels", function(err, result, fields) {
+      con.query("SELECT channels FROM users WHERE userName ='"+req.session.user.username+"'", function(err, result, fields) {
       if (err) throw err;
+      console.log(result[0].channels);
+      let channels = result[0].channels.split(",");
       let json = {};
-      json["channelNames"] = result;
+      json["channelNames"] = channels;
       res.send(JSON.stringify(json));
     });
     } else {
@@ -212,26 +217,54 @@ app.post('/user', jsonParser, function(req, res) {
 app.post('/channels', jsonParser, function(req, res) {
   res.header("Access-Control-Allow-Origin", "*");
   if(req.body.mode == "createChannel") {
-    let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'";
-    con.query(sql, function(err, result, fields) {
-      if (err) throw err;
-      console.log("Length: " + result.length);
-      if(result.length == 0) {
-        sql = "INSERT INTO channels (name) VALUES ('" + req.body.channelName.replace(" ", "_") + "," + req.body.description +"')";
-        con.query(sql, function (err2, result2) {
-          if (err2) throw err2;
-          console.log("1 record inserted");
+    if(req.session.user){
+      let sql = "SELECT id FROM channels WHERE name = '" + req.body.channelName.replace(" ", "_") + "'";
+      con.query(sql, function(err, result, fields) {
+        if (err) throw err;
+        if(result.length == 0) {
+          sql = "INSERT INTO channels (name,desc) VALUES ('" + req.body.channelName.replace(" ", "_") + "," + req.body.description +"')";
+          con.query(sql, function (err2, result2) {
+            if (err2) throw err2;
+            console.log("1 record inserted");
+            res.send("true");
+          });
+        } else {
+          res.send("failure");
+        }
+      });
+    }
+  } else if(req.body.mode == "joinChannel") {
+    if(req.session.user){
+      let channel = req.body.channelName.replace(" ", "_");
+      con.query("SELECT name FROM channels WHERE name = '"+channel+"'", function(err, result){
+        if(err) throw err;
+        if(result.length == 0){
+          res.send("false");
+          return;
+        }
+        con.query("SELECT channels FROM users WHERE userName='"+req.session.user.username+"'", function(err, result1){
+          if (err) throw err;
+          let userChannels = result1[0].channels;
+                  //set new channel
+          if(userChannels.length == 0){
+            userChannels += channel;
+          } else {
+            let s = userChannels.split(",");
+            for(var i =0; i < s.length; i++){
+              if(s[i] == channel) {
+                res.send("false");
+                return;
+              }
+            }
+            userChannels += ","+channel;
+          }
+          con.query("UPDATE users SET channels ='"+userChannels+"' WHERE userName='"+req.session.user.username+"'",function(err, result2){
+            if (err) throw err;
+            res.send("true");
+          });
         });
-        sql = "CREATE TABLE IF NOT EXISTS Channel" + req.body.channelName.replace(" ", "_") + " (id Int AUTO_INCREMENT, message VARCHAR(65000) NOT NULL, PRIMARY KEY (id));";
-        con.query(sql, function (err2, result2) {
-          if (err2) throw err2;
-          console.log("1 record inserted");
-          res.send("success");
-        });
-      } else {
-        res.send("failure");
-      }
-    });
+      });
+    }
   }
 });
 

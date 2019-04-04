@@ -91,7 +91,7 @@
         },
         body : JSON.stringify(message)
     };
-    let url = window.location.href +"/user";
+    let url = window.location.href +"user";
     fetch(url, fetchOptions)
       .then(checkStatus)
       .then(function(responseText) {
@@ -108,10 +108,37 @@
         console.log(error);
     });
   }
-
+  //existing channel
+  function addChannel(){
+    let channelName = prompt("Enter the name of the channel to join:", ""); 
+    const message = {mode: "joinChannel",
+                     channelName: channelName}; // set fields of the message object to the current name and comment
+    const fetchOptions = {
+        method : 'POST',
+        headers : {
+            'Accept': 'application/json',
+            'Content-Type' : 'application/json'
+        },
+        body : JSON.stringify(message)
+    };
+    let url = window.location.href +"channels";
+    fetch(url, fetchOptions)
+      .then(checkStatus)
+      .then(function(responseText) {
+        if(responseText == "true") {
+          alert("Channel successfully joined");
+          updateChannelList();
+        } else {
+          alert("Failed to create channel. Channel with that name already exists.");
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+    });
+  }
   function createChannel() {
     let channelName = prompt("Enter a name for the channel:", "");
-    let channelDesc = prompt("Enter a short description for the channel,", "");
+    let channelDesc = prompt("Enter a short description for the channel:", "");
     const message = {mode: "createChannel",
                      channelName: channelName,
                      desc: channelDesc}; // set fields of the message object to the current name and comment
@@ -129,6 +156,7 @@
       .then(function(responseText) {
         if(responseText == "success") {
           alert("Channel successfully created");
+          updateChannelList();
         } else {
           alert("Failed to create channel. Channel with that name already exists.");
         }
@@ -146,7 +174,10 @@
         document.getElementById("channels-list").innerHTML = "";
         let data = JSON.parse(responseText);
         for(let i = 0; i < data.channelNames.length; i++) {
-          addChannelElem("images/avatar.jpg", data.channelNames[i].name.replace("_", " "));
+          if(data.channelNames[i].length >0) {
+            console.log(data.channelNames[i]);
+            addChannelElem("images/avatar.jpg", data.channelNames[i].replace("_", " "));
+          }
         }
       })
       .catch(function(error) {
@@ -199,7 +230,6 @@
       .then(checkStatus)
       .then(function(responseText) {
         if(responseText == "success") {
-          socket.emit('message', text);
           document.getElementById("message-textarea").value = "";
         } else {
 
