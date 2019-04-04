@@ -112,7 +112,7 @@ app.get('/channels', function (req, res) {
         res.send("");
         return;
       }
-      con.query("SELECT message FROM messages WHERE channel_id = " + result[0].id, function(err, result1, fields) {
+      con.query("SELECT m.message, u.userName FROM messages m inner join users u on m.user_id WHERE channel_id = " + result[0].id+" AND m.user_id = u.id", function(err, result1, fields) {
       if (err) throw err;
       let json = {};
       json["messages"] = result1;
@@ -187,16 +187,6 @@ app.get('/channels', function (req, res) {
       if(req.session.user){
         res.send(req.session.user.curChannel);
       }
-  } else if(req.query.mode == "getUserFromMessage") {
-    if(req.session.user) {
-      con.query("SELECT user_id FROM messages WHERE message ='" + req.query.message + "'", function(err, result) {
-        if (err) return err;
-        con.query("SELECT userName FROM users WHERE id = '" + result[0].user_id + "'", function(err2, result2) {
-          if(err) return err;
-          res.send(result[0].userName);
-        });
-      });
-    }
   }
 });
 app.post('/messages', jsonParser, function(req, res) {
