@@ -12,8 +12,8 @@ io.adapter(redis({ host: 'ec2-52-91-35-153.compute-1.amazonaws.com', port: 6379 
 var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "csc-346-group-project.cf7ec6pc0dbo.us-east-1.rds.amazonaws.com",
-  user: "quinnal2",
-  password: "csc346proj"
+  user: "XXXX",
+  password: "XXXX"
 });
 
 con.connect(function(err) {
