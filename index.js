@@ -27,7 +27,6 @@ app.use("/profile", express.static(__dirname + "/profile"));
 
 io.on('connection', (socket) =>{
   console.log("connected io");
- io.emit('chat', 'new client on '+socket+'!');
 });
 
 //express session api example code

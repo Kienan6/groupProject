@@ -131,21 +131,22 @@ body {
 	border-bottom: 2px solid black;
 	height: 70%;
 	padding: 10px;
-	display: block;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
 .message {
-	display: inline-block;
+	display: block;
+	margin-bottom: 20px;
 }
 .message-text {
-	display: inline;
-	width: 80%;
+	display: block;
 	min-height: 50px;
-	float: left;
 	padding: 5px;
 	margin: 15px;
 	border: 1px solid black;
+	border-radius: 10px;
+	margin-left: 75px;
+	background-color: #CCCCCC;
 }
 .message-text p {
 	word-break: break-all;
@@ -154,7 +155,6 @@ body {
 	background: silver;
 }
 .message-avatar {
-	margin-top: 25px;
 	float: left;
 }
 .message-avatar img {
