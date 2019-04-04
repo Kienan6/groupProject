@@ -24,7 +24,7 @@
       errorlogin.innerText = "Username or password is empty";
       return;
     }
-    let url = window.location.href +"/user?mode=login&userName=" + username + "&password=" + password;
+    let url = window.location.href +"user?mode=login&userName=" + username + "&password=" + password;
     fetch(url)
       .then(checkStatus)
       .then(function(responseText) {
@@ -41,7 +41,7 @@
   }
   function logout() {
     //also leave the channel todo
-    let url = window.location.href +"/user?mode=logout";
+    let url = window.location.href +"user?mode=logout";
     fetch(url)
       .then(checkStatus)
       .then(function(response){
@@ -54,7 +54,7 @@
   }
   function joinChannel(channelName){
     channelName = channelName.replace(" ", "_");
-    let url = window.location.href +"/channels?mode=set&channelName="+channelName;
+    let url = window.location.href +"channels?mode=set&channelName="+channelName;
     fetch(url)
     .then(checkStatus)
     .then(function(response){
@@ -68,7 +68,7 @@
     });
   }
   function getUser() {
-    let url = window.location.href +"/user?mode=getUsername";
+    let url = window.location.href +"user?mode=getUsername";
     return fetch(url)
   }
   function createAccount() {
@@ -123,7 +123,7 @@
         },
         body : JSON.stringify(message)
     };
-    let url = window.location.href +"/channels";
+    let url = window.location.href +"channels";
     fetch(url, fetchOptions)
       .then(checkStatus)
       .then(function(responseText) {
@@ -139,7 +139,7 @@
   }
 
   function updateChannelList() {
-    let url = window.location.href +"/channels?mode=getChannels";
+    let url = window.location.href +"channels?mode=getChannels";
     fetch(url)
       .then(checkStatus)
       .then(function(responseText) {
@@ -156,7 +156,7 @@
 
   function loadChannelMessages(channelName) { 
     currentChannel = channelName;
-    let url = window.location.href +"/channels?mode=getChannelMessages&channelName=" + channelName;
+    let url = window.location.href +"channels?mode=getChannelMessages&channelName=" + channelName;
     fetch(url)
       .then(checkStatus)
       .then(function(responseText) {
@@ -172,7 +172,7 @@
   }
   function getOnlineChannel(channelName) {
     channelName = channelName.replace(" ", "_");
-    let url = window.location.href +"/channels?mode=onlineUsers&channelName=" + channelName;
+    let url = window.location.href +"channels?mode=onlineUsers&channelName=" + channelName;
     fetch(url)
       .then(checkStatus)
       .then(function(responseText){
@@ -194,7 +194,7 @@
         },
         body : JSON.stringify(message)
     };
-    let url = window.location.href +"/messages";
+    let url = window.location.href +"messages";
     fetch(url, fetchOptions)
       .then(checkStatus)
       .then(function(responseText) {
