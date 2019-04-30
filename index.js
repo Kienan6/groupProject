@@ -291,6 +291,11 @@ app.post('/channels', jsonParser, function (req, res) {
 });
 app.post('/upload', jsonParser, function (req, res) {
   res.header("Access-Control-Allow-Origin", "*");
+  let sf = req.files;
+  if(sf == null){
+    res.send("");
+    return;
+  }
   let content = req.files.sampleFile.data;
   let path_lower = "";
   let url = "";
