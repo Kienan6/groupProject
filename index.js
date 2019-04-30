@@ -10,13 +10,13 @@ const http = require('http').Server(app);
 const io = require("socket.io")(http);
 const redis = require('socket.io-redis');
 io.adapter(redis({ host: 'ec2-52-91-35-153.compute-1.amazonaws.com', port: 6379 }));
-var access_token = "9wNcD65aQjAAAAAAAAAAD5S9A25_uUT_N_dLBh7x0bTTEDvkWukeRuMRcmOSINNH";
+var access_token = "XXXXXXXXXXXX";
 
 var mysql = require('mysql');
 var con = mysql.createConnection({
   host: "csc-346-group-project.cf7ec6pc0dbo.us-east-1.rds.amazonaws.com",
-  user: "quinnal2",
-  password: "csc346proj"
+  user: "XXX",
+  password: "XXXX"
 });
 
 con.connect(function (err) {
