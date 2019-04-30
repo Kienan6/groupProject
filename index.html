@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Chat Site</title>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Site</title>
   <link rel="stylesheet" href="style.css" type="text/css">
   <script type="text/javascript" src="main.js"></script>
   <script src="/socket.io/socket.io.js"></script>
-  </head>
-  <body>
-    <script>
-      var socket = io();
-      socket.on('chat', function(msg) {
-        createMessageElem("images/avatar.jpg", msg.username, msg.message);
-      });
-      socket.on('userOnline', function(msg){
-        console.log(msg.username+ " "+msg.curChannel);
-        addOnlineUser(msg);
-      });
-    </script>
+</head>
+
+<body>
+  <script>
+    var socket = io();
+    socket.on('chat', function (msg) {
+      createMessageElem("images/avatar.jpg", msg.username, msg.message);
+    });
+    socket.on('userOnline', function (msg) {
+      console.log(msg.username + " " + msg.curChannel);
+      addOnlineUser(msg);
+    });
+    socket.on('media', function (msg) {
+      createMediaElem("images/avatar.jpg", msg.username, msg.link.substring(msg.link.indexOf(':') + 1));
+    });
+  </script>
 
   <div id="header-main">
-    <div class="header-info" id="left"><h2>ChatBox</h2></div>
+    <div class="header-info" id="left">
+      <h2>ChatBox</h2>
+    </div>
     <div class="header-info" id="right">
-     <div class="elem" onclick="createChannel()"><img src="images/addServerIcon.png" alt="person 1"><p class="iconText">Create Channel</p></div>
-     <div class="elem" onclick="addChannel()"><img src="images/joinServerIcon.png" alt="person 1"><p class="iconText">Join Channel</p></div>
-     <div class="elem" onclick="showLoginForm()"><img src="images/loginArrow.png" alt="person 1"><p class="iconText">Login</p></div>
+      <div class="elem" onclick="createChannel()"><img src="images/addServerIcon.png" alt="person 1">
+        <p class="iconText">Create Channel</p>
+      </div>
+      <div class="elem" onclick="addChannel()"><img src="images/joinServerIcon.png" alt="person 1">
+        <p class="iconText">Join Channel</p>
+      </div>
+      <div class="elem" onclick="showLoginForm()"><img src="images/loginArrow.png" alt="person 1">
+        <p class="iconText">Login</p>
+      </div>
     </div>
   </div>
 
@@ -33,30 +46,30 @@
     <button onclick="showLoginForm()">Cancel</button>
   </div>
   <div class="popout" id="login-form">
-      <form action="javascript:void(0);" class="container-login" id="login" onsubmit="logIn()">
-        <label for="username">Username: </label>
-        <input type="text" name="username">
-        <label for="pass">Password: </label>
-        <input type="password" name="pass">
-        <button type="submit" name="submit">Login</button>
-        <button type="submit" onclick="showLoginForm()" name="cancel">Cancel</button>
-        <button type="submit" onclick="showLoginForm(); showCreateForm()" name="create-acc">Create Account</button>
-        <span id="error-login" style="color:red"></span>
-      </form>
-    </div>
+    <form action="javascript:void(0);" class="container-login" id="login" onsubmit="logIn()">
+      <label for="username">Username: </label>
+      <input type="text" name="username">
+      <label for="pass">Password: </label>
+      <input type="password" name="pass">
+      <button type="submit" name="submit">Login</button>
+      <button type="submit" onclick="showLoginForm()" name="cancel">Cancel</button>
+      <button type="submit" onclick="showLoginForm(); showCreateForm()" name="create-acc">Create Account</button>
+      <span id="error-login" style="color:red"></span>
+    </form>
+  </div>
 
-    <div class="popout" id="create-form">
-      <form action="javascript:void(0);" class="container-login" id="create" onsubmit="createAccount()">
-        <h3>Create account</h3>
-        <label for="username">Username: </label>
-        <input type="text" name="username">
-        <label for="password">Password: </label>
-        <input type="password" name="password">
-        <button type="submit" name="submit">Create Account</button>
-        <button type="submit" onclick="showCreateForm();" name="cancel">Cancel</button>
-        <span id="error-login" style="color:red"></span>
-      </form>
-    </div>
+  <div class="popout" id="create-form">
+    <form action="javascript:void(0);" class="container-login" id="create" onsubmit="createAccount()">
+      <h3>Create account</h3>
+      <label for="username">Username: </label>
+      <input type="text" name="username">
+      <label for="password">Password: </label>
+      <input type="password" name="password">
+      <button type="submit" name="submit">Create Account</button>
+      <button type="submit" onclick="showCreateForm();" name="cancel">Cancel</button>
+      <span id="error-login" style="color:red"></span>
+    </form>
+  </div>
 
   <div id="content-area">
 
@@ -71,9 +84,16 @@
     <div id="chat-container">
       <div id="message-container">
       </div>
+
       <div id="text-box">
         <textarea id="message-textarea"></textarea>
-        <button id="send-message" onclick="sendMessage()">Send</button>
+        <form ref='uploadForm' id='uploadForm' action="javascript:void(0);" onsubmit="submitMedia()" method='post'
+          encType="multipart/form-data">
+          <input type="file" name="sampleFile" id="file" />
+          <label for="file">Browse</label>
+          <input type='submit' value='Upload!' />
+          <button id="send-message" onclick="sendMessage()">Send</button>
+        </form>
       </div>
     </div>
 
@@ -102,5 +122,6 @@
   </div>
 
 
-  </body>
+</body>
+
 </html>
